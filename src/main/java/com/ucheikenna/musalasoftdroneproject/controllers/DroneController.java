@@ -49,19 +49,19 @@ public class DroneController {
         return droneServices.loadDroneWithMedication(droneId, medicationId);
     }
 
-    @GetMapping("/get_medication")
+    @GetMapping("/get_medication_on_drone")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<Medication>> getMedicationItemsAssignedToADrone(@RequestParam("drone-id") Long droneId) {
         return droneServices.getDroneAssignedMedication(droneId);
     }
 
-    @GetMapping("/available-drones-for-loading")
+    @GetMapping("/available_drones")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<Drone>> getAvailableDronesForLoading() {
         return droneServices.getAllAvailableDrones();
     }
 
-    @GetMapping("drone-battery-level")
+    @GetMapping("/battery_level")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<String> getDroneBatteryStatus(@RequestParam("drone-id") Long droneId) {
         return droneServices.getDroneBatteryStatus(droneId);

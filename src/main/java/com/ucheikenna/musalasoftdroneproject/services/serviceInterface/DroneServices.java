@@ -21,4 +21,6 @@ public interface DroneServices {
     ResponseEntity<List<Drone>> getAllAvailableDrones();
 
     ResponseEntity<String> getDroneBatteryStatus(Long droneId);
+
+    void scheduleFixedRateTaskAsync();
 }

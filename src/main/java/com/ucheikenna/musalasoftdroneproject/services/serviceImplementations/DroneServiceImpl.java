@@ -11,8 +11,10 @@ import com.ucheikenna.musalasoftdroneproject.pojo.responses.DroneResponse;
 import com.ucheikenna.musalasoftdroneproject.repositories.DroneRepository;
 import com.ucheikenna.musalasoftdroneproject.repositories.MedicationRepository;
 import com.ucheikenna.musalasoftdroneproject.services.serviceInterface.DroneServices;
+import com.ucheikenna.musalasoftdroneproject.utility.DefaultMessages;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,7 @@ import java.util.stream.Collectors;
 
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class DroneServiceImpl implements DroneServices {
 
@@ -96,9 +99,20 @@ public class DroneServiceImpl implements DroneServices {
 
     @Override
     public ResponseEntity<String> getDroneBatteryStatus(Long droneId) {
+
         Drone drone = droneRepository.findById(droneId).orElseThrow(() -> new DroneException(DRONE_NOT_FOUND));
         Integer batteryLevel = drone.getBatteryPercent();
         return ResponseEntity.ok().body(String.format(DRONE_BATTERY_LEVEL, batteryLevel));
+    }
+
+    @Override
+    public void scheduleFixedRateTaskAsync()  {
+
+        List<Drone> drones = (List<Drone>) droneRepository.findAll();
+        if(!drones.isEmpty())
+            drones
+                    .forEach(drone ->
+                            log.info(DefaultMessages.BATTERY_LEVEL_REPORT, drone.getDroneId(),drone.getDroneModel(), drone.getBatteryPercent()));
     }
 
     private DroneResponse droneResponseMapper(Drone drone) {
